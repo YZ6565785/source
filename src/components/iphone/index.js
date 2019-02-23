@@ -8,7 +8,7 @@ import style_iphone from '../button/style_iphone';
 import $ from 'jquery';
 // import the Button component
 import Button from '../button';
-//import CityIndex from './index_city.js';
+import Mainframe from '../city_page/main_frame';
 
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
@@ -68,16 +68,17 @@ export default class Iphone extends Component {
 		var table = this.future_table();
 		return (
 			
-			<div class ={ style.container }>
-				{this.state.display ? null :
+			<div id = {"container_main"} class ={ style.container }>
 				
-				<span class ={ style.backgroundBlur }>
+				{this.state.display ? null :
+				<span id = {"backgroundBlur"} class ={ style.backgroundBlur }>
 					<span class ={ style.menu }>
 						<img class = {style.menu_icon} src = "../assets/icons/add.png" alt="add icon" width ="30" height = "30" />
 						<img class = {style.menu_icon} src = "../assets/icons/share.png" alt="share icon" width ="30" height = "30" />
-						<div id = "current_city" class ={ style.city }>
+						
+						<button id = "current_city" class ={ style.city } onclick = {this.manageCity}>
 							{ this.state.locate }
-						</div>
+						</button>
 					</span>
 					<span class ={ style.header }>
 						
@@ -109,7 +110,7 @@ export default class Iphone extends Component {
 							<p id ="icon_sunset" class = {style.indicators_content}>{this.state.sunset}</p>
 						</div>
 					</span>
-					<button id ={"below_button"} class = {style.button_below} onclick ={this.musicRecommendation}>Button</button>
+					<button id ={"below_button"} class = {style.button_below} onclick ={this.musicRecommendation}>Recommendation</button>
 					<div id = {"below_area"}>
 						<div  class ={style.timeline}>
 							<div id ={"below_timeline_table"} class ={style.timeline_table}>
@@ -127,7 +128,10 @@ export default class Iphone extends Component {
 						</div>
 					</div>
 				</span>}
-				<div class = {style.victor}>victor</div>
+				{this.state.display ? null : <div id = {"cityManage"} class = {style.cityManage} >
+					<Mainframe />
+					<button class = {style.cityManage_back} onclick ={this.back_to_home}>back</button>
+				</div>}
 				
 				<div class ={ style.details }></div>
 				<div class = { style_iphone.container }> 
@@ -168,6 +172,26 @@ export default class Iphone extends Component {
 			this.setState({showBelow: true});
 		}
 		//this.setState({showBelow: false});
+	}
+	manageCity = () =>{
+		//var container_main = document.getElementById("container_main");
+		//container_main.style.display = "none";
+		
+		//this.musicRecommendation();
+		setTimeout(function() {
+			$("#backgroundBlur").hide();
+		}, 200);
+		setTimeout(function() {
+			var cityManage = document.getElementById("cityManage");
+			cityManage.style.display = "flex";
+		}, 300);
+		
+		
+	}
+	back_to_home = ()=>{
+		var cityManage = document.getElementById("cityManage");
+		cityManage.style.display = "none";
+		$("#backgroundBlur").show();
 	}
 	timeline_table = () =>{
 		let table = [];
@@ -380,39 +404,7 @@ export default class Iphone extends Component {
 		//=============================
 		var humidity = parsed_json['main']['humidity'];
 		
-		var wind_deg = parsed_json['wind']['deg'];
-		console.log(wind_deg);
-		var wind_direction = "";
-		//var wind_dirction = ["N", "NE", "E", "SE", "SW", "W", "NW"]
-		if (wind_deg > 340 && wind_deg <= 10){
-			wind_direction = "N";
-		}
-		else if (wind_deg > 10 && wind_deg <= 70){
-			wind_direction = "NE";
-		}
-		else if (wind_deg > 70 && wind_deg <= 100){
-			wind_direction = "E";
-		}
-		else if (wind_deg > 100 && wind_deg <= 160){
-			wind_direction = "SE";
-		}
-		else if (wind_deg > 160 && wind_deg <= 190){
-			wind_direction = "S";
-		}
-		else if (wind_deg > 190 && wind_deg <= 250){
-			wind_direction = "SW";
-		}
-		else if (wind_deg > 250 && wind_deg <= 280){
-			wind_direction = "W";
-		}
-		else if (wind_deg > 280 && wind_deg <= 340){
-			wind_direction = "NW";
-		}
-		else{
-			wind_direction = "Direction error";
-		}
-		
-		var wind = wind_direction +", "+ parsed_json['wind']['speed'] + "mps";
+		// wind data in future api
 		var sunrise = new Date(parsed_json['sys']['sunrise']*1000).toLocaleTimeString();
 		var sunset = new Date(parsed_json['sys']['sunset']*1000).toLocaleTimeString();
 		
@@ -425,7 +417,7 @@ export default class Iphone extends Component {
 			clock: currentTime,
 			display: false,
 			humidity: humidity,
-			wind: wind,
+			//wind: wind,
 			sunrise: sunrise,
 			sunset: sunset
 			
@@ -463,7 +455,47 @@ export default class Iphone extends Component {
 			
 		}
 		
+		// wind
+		//===================================
+		//							        =
+		// set up for the indicators: wind  =
+		//							        =
+		//===================================
+		var wind_deg = parsed_json['list'][0]['wind']['deg'];
+		console.log(wind_deg);
+		var wind_direction = "";
+		//var wind_dirction = ["N", "NE", "E", "SE", "SW", "W", "NW"]
+		if (wind_deg > 340 && wind_deg <= 10){
+			wind_direction = "N";
+		}
+		else if (wind_deg > 10 && wind_deg <= 70){
+			wind_direction = "NE";
+		}
+		else if (wind_deg > 70 && wind_deg <= 100){
+			wind_direction = "E";
+		}
+		else if (wind_deg > 100 && wind_deg <= 160){
+			wind_direction = "SE";
+		}
+		else if (wind_deg > 160 && wind_deg <= 190){
+			wind_direction = "S";
+		}
+		else if (wind_deg > 190 && wind_deg <= 250){
+			wind_direction = "SW";
+		}
+		else if (wind_deg > 250 && wind_deg <= 280){
+			wind_direction = "W";
+		}
+		else if (wind_deg > 280 && wind_deg <= 340){
+			wind_direction = "NW";
+		}
+		else{
+			wind_direction = "";
+			console.warn("Direction error: " + wind_deg);
+		}
 		
+		wind_direction +=", ";
+		var wind = wind_direction + parsed_json['list'][0]['wind']['speed'] + "mps";
 		
 		//=================================
 		//							      =
@@ -528,7 +560,9 @@ export default class Iphone extends Component {
 			timeline_time: time_list,
 			timeline_temp: temp_list,
 			future_temp: future_temp_list,
-			future_icon_list: future_temp_icon_list
+			future_icon_list: future_temp_icon_list,
+			//wind due to today api err
+			wind: wind
 		});
 		
 		console.log("icon list: " +future_temp_icon_list);

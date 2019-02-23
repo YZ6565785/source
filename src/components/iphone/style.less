@@ -16,7 +16,29 @@
 	overflow-x: hidden;
 	
 }
-	
+.cityManage{
+	display: none;
+}	
+.cityManage_back{
+	z-index: 999999;
+		
+	position: absolute;
+		
+	width: 98%;
+	height: 40px;
+		
+	left: 1%;
+	top: 94%;
+	border-radius: 5px;
+
+	margin: 0 auto;
+	font-size: 10px;
+	background: #6DA4CC;
+	border: 1px solid #fff;
+	color: #fff;
+	font-weight: 300;
+	transition: all 0.3s ease-in-out;
+}
 .backgroundBlur:before{
 	content: '';
 	display: flex;
@@ -110,7 +132,7 @@
 .city{
 	flex: 1;
 	font-size: 1.7em;
-	font-weight: 400;
+	background: #0000;
 	text-align: center;
 	margin-left: 80px;
 	margin-right: 20px;
@@ -120,11 +142,13 @@
 	padding: 5px 10px 5px 10px;
 	border-radius: 8px;
 }
-.city:hover >  {
-	background: #fff;
+.city:hover  {
 	color: #6DA4CC;
-	border: 2px solid transparent;
-	transition: .4s ease-in-out;
+		border-bottom: 1px solid white;
+		border-top: 1px solid white;
+		transition: .4s ease-in-out;
+		border-radius: 5px;
+		padding: 2px 2px 2px 2px;
 }
 .conditions {
 	flex: 1;
