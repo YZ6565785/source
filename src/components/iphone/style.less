@@ -18,6 +18,7 @@
 }
 .cityManage{
 	display: none;
+	position: absolute;
 }	
 .cityManage_back{
 	z-index: 999999;
@@ -38,6 +39,12 @@
 	color: #fff;
 	font-weight: 300;
 	transition: all 0.3s ease-in-out;
+}
+.cityManage_back:hover>{
+	background: #fff;
+	color: #6DA4CC;
+	border: 2px solid transparent;
+	transition: .4s ease-in-out;
 }
 .backgroundBlur:before{
 	content: '';
@@ -131,6 +138,7 @@
 }
 .city{
 	flex: 1;
+	color: white;
 	font-size: 1.7em;
 	background: #0000;
 	text-align: center;
@@ -142,13 +150,10 @@
 	padding: 5px 10px 5px 10px;
 	border-radius: 8px;
 }
-.city:hover  {
-	color: #6DA4CC;
-		border-bottom: 1px solid white;
-		border-top: 1px solid white;
-		transition: .4s ease-in-out;
-		border-radius: 5px;
-		padding: 2px 2px 2px 2px;
+.city:hover >  {
+	background: #6DA4CC;
+	border: 2px solid transparent;
+	transition: .4s ease-in-out;
 }
 .conditions {
 	flex: 1;

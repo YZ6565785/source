@@ -178,20 +178,16 @@ export default class Iphone extends Component {
 		//container_main.style.display = "none";
 		
 		//this.musicRecommendation();
-		setTimeout(function() {
-			$("#backgroundBlur").hide();
-		}, 200);
-		setTimeout(function() {
-			var cityManage = document.getElementById("cityManage");
-			cityManage.style.display = "flex";
-		}, 300);
-		
-		
+		$("#backgroundBlur").hide(1000);
+		$("#cityManage").toggle(1000, function(){});
 	}
 	back_to_home = ()=>{
-		var cityManage = document.getElementById("cityManage");
-		cityManage.style.display = "none";
-		$("#backgroundBlur").show();
+		$("#backgroundBlur").show(100);
+		$("#cityManage").toggle(1000, function(){});
+		//setTimeout(function() {
+			//var cityManage = document.getElementById("cityManage");
+			//cityManage.style.display = "none";
+		//}, 200);
 	}
 	timeline_table = () =>{
 		let table = [];
