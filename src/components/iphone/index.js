@@ -9,6 +9,7 @@ import $ from 'jquery';
 // import the Button component
 import Button from '../button';
 import Mainframe from '../city_page/main_frame';
+import Message from "./Message.js";
 
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
@@ -21,15 +22,29 @@ export default class Iphone extends Component {
 		// button display state
 		this.setState({ 
 			display: true,
-			showBelow: true
+			showBelow: true,
+			city: 'London' 
 		});
 	}
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {
+		var city_list = ["London", "Paris", "Beijing", "Paris", "Nice", "Tokyo"];
+		var cityId = "";
+		if (city_list.includes(this.state.city)){
+			cityId = this.state.city;
+		}
+		else{
+			alert("due to api limit, cannot find "+ this.state.city);
+			cityId = this.state.locate;
+				
+		}
+		var link = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=627605be16f00179b6aed833e7f34a27";
+		
+		this.setState({city: cityId});
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url_today = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=627605be16f00179b6aed833e7f34a27";
-		var url_timeline = "http://api.openweathermap.org/data/2.5/forecast?q=London&units=metric&APPID=627605be16f00179b6aed833e7f34a27";
+		var url_today = "http://api.openweathermap.org/data/2.5/weather?q="+cityId+"&units=metric&APPID=627605be16f00179b6aed833e7f34a27";
+		var url_timeline = "http://api.openweathermap.org/data/2.5/forecast?q="+cityId+"&units=metric&APPID=627605be16f00179b6aed833e7f34a27";
 		var url_uv = "http://api.openweathermap.org/data/2.5/uvi?&lat=51.509865&lon=-0.118092&APPID=627605be16f00179b6aed833e7f34a27";
 	  //url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=627605be16f00179b6aed833e7f34a27"
 		$.ajax({
@@ -131,7 +146,15 @@ export default class Iphone extends Component {
 				{this.state.display ? null : <div id = {"cityManage"} class = {style.cityManage} >
 					<Mainframe />
 					<button class = {style.cityManage_back} onclick ={this.back_to_home}>back</button>
-				</div>}
+					<div class = {style.cityInput}>
+					<form onSubmit={this.handleSubmit} > 
+						<label htmlFor="city">City: </label>
+						<input class ={style.input_box_city} type="text" name="city" value={this.state.city} onChange={this.handleChange} onFocus={this.handleFocus} />
+					</form>
+					<h3 class = {style.cityManage_chosenCity}>Current city: {this.state.city}</h3>
+					</div>
+				</div>
+				}
 				
 				<div class ={ style.details }></div>
 				<div class = { style_iphone.container }> 
@@ -141,6 +164,19 @@ export default class Iphone extends Component {
 		);
 		
 		
+	}
+	handleChange = ({ target }) => {
+		var string = target.value;
+		this.setState({ [target.name]: string.charAt(0).toUpperCase()+string.substring(1) });
+	}
+	handleSubmit = event => {
+		event.preventDefault();
+		//alert('Your username is: ' + this.state.city);
+		this.fetchWeatherData();
+		this.back_to_home();
+	}
+	handleFocus = function(event) {
+		event.target.select();
 	}
 	musicRecommendation = () =>{
 		var timeline_table = document.getElementById("below_timeline_table");
@@ -421,7 +457,7 @@ export default class Iphone extends Component {
 		this.setState( {
 			clock: new Date(Date.now()).toLocaleTimeString()
 		} );
-		
+		console.log("now switch to: "+ location)
 		
 	}// end of the today's api
 	
@@ -536,7 +572,7 @@ export default class Iphone extends Component {
 				future_temp_icon_list.push(icon_id);
 			}
 
-			console.log("i: " + i + ", temp: " +Math.round(parsed_json['list'][i]['main']['temp'])+", time: "+day_time.split(' ')); 
+			//console.log("i: " + i + ", temp: " +Math.round(parsed_json['list'][i]['main']['temp'])+", time: "+day_time.split(' ')); 
 
 			// set icons for future weather
 			
@@ -570,6 +606,11 @@ export default class Iphone extends Component {
 		var id = "future_icon_" + (0+1).toString();
 		var future_icon_src = document.getElementById(id);
 		//future_icon_src.src = "../assets/icons/moon.png";
+		
+		var msg = require('./Message.js');
+		console.log("message from Message.js:" + msg.sayHelloInSpanish());
+		var obj = new Message();
+		console.log("obj from Message.js:" + obj.state.message);
 	}// end of timeline api
 	
 }
