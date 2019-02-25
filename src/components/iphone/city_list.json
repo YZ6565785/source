@@ -1,0 +1,20 @@
+[
+  {
+    "id": 4119617,
+    "name": "London",
+    "country": "US",
+    "coord": {
+      "lon": -93.25296,
+      "lat": 35.328972
+    }
+  },
+  {
+    "id": 1796236,
+    "name": "Shanghai",
+    "country": "CN",
+    "coord": {
+      "lon": 121.458061,
+      "lat": 31.222219
+    }
+  }
+ ]

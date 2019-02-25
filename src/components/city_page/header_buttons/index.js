@@ -8,7 +8,7 @@ export default class Headerbuttons extends Component {
 	render() {
 		return (
 			<div class = {style.container}>
-				<button class = {style.return}>			
+				<button class = {style.return} onclick = {this.props.back1}>			
 				</button>
 				
 				<div class = {style.pm_container}>				

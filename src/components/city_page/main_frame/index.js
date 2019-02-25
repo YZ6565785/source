@@ -24,6 +24,10 @@ export default class Mainframe extends Component {
 		this.setState({ display: true });
 	}
 	
+	componentDidMount(){
+		this.fetchWeatherData();
+	}
+	
 
 	
 
@@ -115,16 +119,12 @@ export default class Mainframe extends Component {
 		return ( 
 			<div class={ style.container } >
 				
-				<Headerbuttons />
+				<Headerbuttons back1 = {this.props.back}/>
 				{london_weather}
 				{london_weather1}
 				
 				<Addcity />
 				
-				<div class= { style_iphone.container }> 
-					{ this.state.display ? <Weatherbutton class={ style_iphone.button } clickFunction={ this.fetchWeatherData }/ > : null }					
-				</div>
-
 			</div>
 			
 		);

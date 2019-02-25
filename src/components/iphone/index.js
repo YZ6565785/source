@@ -20,25 +20,39 @@ export default class Iphone extends Component {
 		// temperature state
 		this.state.temp = "";
 		// button display state
+		$.ajax({
+			url: "components/iphone/city.list.json",
+			dataType: "json",
+			success : this.getData_city,
+			error : function(req, err){ console.log('local API call failed ' + err); }
+		});
 		this.setState({ 
 			display: true,
 			showBelow: true,
-			city: 'London' 
+			city: 'London'
 		});
 	}
-
+	
+	//fetch weather dataafter render
+	componentDidMount (){
+		this.fetchWeatherData();
+	}
+	
+	
 	// a call to fetch weather data via wunderground
+	getData_city = (parse_json) =>{
+		var arr =[];
+		for (var i =0; i<parse_json.length;i++){
+			arr.push(parse_json[i].name);
+		}
+		this.setState({ 
+			city_list: arr
+		});
+		//console.log(arr);
+	}
 	fetchWeatherData = () => {
-		var city_list = ["London", "Paris", "Beijing", "Paris", "Nice", "Tokyo"];
-		var cityId = "";
-		if (city_list.includes(this.state.city)){
-			cityId = this.state.city;
-		}
-		else{
-			alert("due to api limit, cannot find "+ this.state.city);
-			cityId = this.state.locate;
-				
-		}
+		
+		var cityId = this.state.city;
 		var link = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=627605be16f00179b6aed833e7f34a27";
 		
 		this.setState({city: cityId});
@@ -47,13 +61,6 @@ export default class Iphone extends Component {
 		var url_timeline = "http://api.openweathermap.org/data/2.5/forecast?q="+cityId+"&units=metric&APPID=627605be16f00179b6aed833e7f34a27";
 		var url_uv = "http://api.openweathermap.org/data/2.5/uvi?&lat=51.509865&lon=-0.118092&APPID=627605be16f00179b6aed833e7f34a27";
 	  //url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=627605be16f00179b6aed833e7f34a27"
-		$.ajax({
-			url: url_timeline,
-			dataType: "jsonp",
-			success : this.parseResponse_timeline,
-			
-			error : function(req, err){ console.log('timeline API call failed ' + err); }
-		})
 		
 		$.ajax({
 			url: url_today,
@@ -61,14 +68,22 @@ export default class Iphone extends Component {
 			success : this.parseResponse_today,
 			
 			error : function(req, err){ console.log('today API call failed ' + err); }
-		})
+		});
 		
 		$.ajax({
 			url: url_uv,
 			dataType: "json",
 			success : this.parseResponse_uv,
 			error : function(req, err){ console.log('uv API call failed ' + err); }
-		})
+		});
+		
+		$.ajax({
+			url: url_timeline,
+			dataType: "jsonp",
+			success : this.parseResponse_timeline,
+			
+			error : function(req, err){ console.log('timeline API call failed ' + err); }
+		});
 		
 		this.setState({ display: false });
 		
@@ -91,7 +106,7 @@ export default class Iphone extends Component {
 						<img class = {style.menu_icon} src = "../assets/icons/add.png" alt="add icon" width ="30" height = "30" />
 						<img class = {style.menu_icon} src = "../assets/icons/share.png" alt="share icon" width ="30" height = "30" />
 						
-						<button id = "current_city" class ={ style.city } onclick = {this.manageCity}>
+						<button id = "current_city" class ={ style.city } onclick = {this.goToCityPage}>
 							{ this.state.locate }
 						</button>
 					</span>
@@ -144,8 +159,8 @@ export default class Iphone extends Component {
 					</div>
 				</span>}
 				{this.state.display ? null : <div id = {"cityManage"} class = {style.cityManage} >
-					<Mainframe />
-					<button class = {style.cityManage_back} onclick ={this.back_to_home}>back</button>
+					<Mainframe back = {this.back_to_home} />
+
 					<div class = {style.cityInput}>
 					<form onSubmit={this.handleSubmit} > 
 						<label htmlFor="city">City: </label>
@@ -157,9 +172,7 @@ export default class Iphone extends Component {
 				}
 				
 				<div class ={ style.details }></div>
-				<div class = { style_iphone.container }> 
-					{ this.state.display ? <Button class ={ style_iphone.button } clickFunction={ this.fetchWeatherData}/ > : null }
-				</div>
+
 			</div>
 		);
 		
@@ -167,63 +180,87 @@ export default class Iphone extends Component {
 	}
 	handleChange = ({ target }) => {
 		var string = target.value;
-		this.setState({ [target.name]: string.charAt(0).toUpperCase()+string.substring(1) });
+		var input = string.charAt(0).toUpperCase()+string.substring(1);
+		
+		if (this.state.city_list.includes(input)){
+			this.setState({ [target.name]: input });
+		}
+		else{
+			alert("due to the limitation of the api, connot find " + input);
+		}
 	}
 	handleSubmit = event => {
 		event.preventDefault();
 		//alert('Your username is: ' + this.state.city);
+		
 		this.fetchWeatherData();
 		this.back_to_home();
+		
 	}
 	handleFocus = function(event) {
 		event.target.select();
 	}
 	musicRecommendation = () =>{
-		var timeline_table = document.getElementById("below_timeline_table");
-		var future_container = document.getElementById("below_future");
-		var button = document.getElementById("below_button");
 		var show = this.state.showBelow;
 		console.log(show);
+		
+		var button = document.getElementById("below_button");
 		if (show){
-			//$("#below_timeline_table").empty();
-			//$("#below_future").empty();
-			//this.state.showBelow = false;
-			timeline_table.style.display = "none";
-			future_container.style.display = "none";
+			this.hiding_future();
+			
 			button.style.top = "370px";
 			button.style.background = "#0000";
 			button.style.height = "360px";
-			
-			this.setState({showBelow: false});
-			
-			console.log(this.state.future_temp);
 		}
 		else{
-			$("#below_future_table").empty();
-			timeline_table.style.display = "flex";
-			future_container.style.display = "flex";
+			this.showing_future();
 			button.style.top = "97%";
 			button.style.height = "20px";
 			button.style.background = "#6DA4CC";
-			this.setState({showBelow: true});
 		}
 		//this.setState({showBelow: false});
 	}
-	manageCity = () =>{
+	hiding_future = () =>{
+		var timeline_table = document.getElementById("below_timeline_table");
+		var future_container = document.getElementById("below_future");
+		
+		
+		//$("#below_timeline_table").empty();
+		//$("#below_future").empty();
+		//this.state.showBelow = false;
+		timeline_table.style.display = "none";
+		future_container.style.display = "none";
+		
+		this.setState({showBelow: false});
+		
+		console.log(this.state.future_temp);
+	}
+	showing_future = ()=>{
+		var timeline_table = document.getElementById("below_timeline_table");
+		var future_container = document.getElementById("below_future");
+		
+		
+		
+		$("#below_future_table").empty();
+		timeline_table.style.display = "flex";
+		future_container.style.display = "flex";
+		
+		this.setState({showBelow: true});
+	}
+	goToCityPage = () =>{
 		//var container_main = document.getElementById("container_main");
 		//container_main.style.display = "none";
 		
 		//this.musicRecommendation();
 		$("#backgroundBlur").hide(1000);
-		$("#cityManage").toggle(1000, function(){});
+		$("#cityManage").toggle(1000);
+		this.hiding_future();
 	}
 	back_to_home = ()=>{
 		$("#backgroundBlur").show(100);
-		$("#cityManage").toggle(1000, function(){});
-		//setTimeout(function() {
-			//var cityManage = document.getElementById("cityManage");
-			//cityManage.style.display = "none";
-		//}, 200);
+		//$("#cityManage").toggle(1000);
+		$("#cityManage").toggle(500);
+		this.showing_future();
 	}
 	timeline_table = () =>{
 		let table = [];
@@ -284,70 +321,69 @@ export default class Iphone extends Component {
 	
 	
 	fillOutDays = () =>{
-			
-			var refreshIntervalId = setInterval(() =>{
+		var refreshIntervalId = setInterval(() =>{
 				
-				var icon = this.state.future_icon_list&&this.state.future_icon_list.map((item, index) => {
-					return (item);
-				});
-				for (var i =0; i<6; i++){
-					var id = "future_icon_" + (i+1).toString();
-					var future_icon_src = document.getElementById(id);
+		var icon = this.state.future_icon_list&&this.state.future_icon_list.map((item, index) => {
+			return (item);
+		});
+		for (var i =0; i<6; i++){
+			var id = "future_icon_" + (i+1).toString();
+			var future_icon_src = document.getElementById(id);
 					
-					switch (icon[i]){
-						case "01d":
-							future_icon_src.src="../assets/icons/sunny.png";
-							break;
-						case "01n":
-						case "02n":
-							future_icon_src.src="../assets/icons/moon.png";
-							break;
-						case "02d":
-						case "03d":
-							future_icon_src.src="../assets/icons/cloudy.png";
-							break;
-						case "04d":
-						case "03n":
-						case "04n":
-							future_icon_src.src = "../assets/icons/clouds.png";
-							break;
-						case "09d":
-						case "10d":
-						case "09n":
-						case "10n":
-							future_icon_src.src = "../assets/icons/rainy.png";
-							break;
-						case "11d":
-						case "11n":
-							future_icon_src.src = "../assets/icons/storm.png";
-							break;
-						case "13d":
-						case "13n":
-							future_icon_src.src = "../assets/icons/snowy.png";
-							break;
-						case "50d":
-							future_icon_src.src = "../assets/icons/fog_d.png";
-							break;
-						case "50n":
-							future_icon_src.src = "../assets/icons/fog_n.png";
-							break;
-						default:
-							future_icon_src.src = "../assets/icons/lock.png";
-					}
-				}
-				//console.log(icon);
+			switch (icon[i]){
+				case "01d":
+					future_icon_src.src="../assets/icons/sunny.png";
+					break;
+				case "01n":
+				case "02n":
+					future_icon_src.src="../assets/icons/moon.png";
+					break;
+				case "02d":
+				case "03d":
+					future_icon_src.src="../assets/icons/cloudy.png";
+					break;
+				case "04d":
+				case "03n":
+				case "04n":
+					future_icon_src.src = "../assets/icons/clouds.png";
+					break;
+				case "09d":
+				case "10d":
+				case "09n":
+				case "10n":
+					future_icon_src.src = "../assets/icons/rainy.png";
+					break;
+				case "11d":
+				case "11n":
+					future_icon_src.src = "../assets/icons/storm.png";
+					break;
+				case "13d":
+				case "13n":
+					future_icon_src.src = "../assets/icons/snowy.png";
+					break;
+				case "50d":
+					future_icon_src.src = "../assets/icons/fog_d.png";
+					break;
+				case "50n":
+					future_icon_src.src = "../assets/icons/fog_n.png";
+					break;
+				default:
+					future_icon_src.src = "../assets/icons/lock.png";
+			}
+		}
+		//console.log(icon);
 				
 				
 				
 				
 				
-				clearInterval(refreshIntervalId);
+		clearInterval(refreshIntervalId);
 				
-				//document.write(future_icon_src); 
-			}, 100);
+		//document.write(future_icon_src); 
+		}, 100);	
 			
 
-		}
+	}
 	parseResponse_uv = (parsed_json) => {
 		var uv = parsed_json["value"];
 		
@@ -463,9 +499,16 @@ export default class Iphone extends Component {
 	
 	
 	parseResponse_timeline = (parsed_json) => {
+		//===========================
+		//							=
+		// set up for the timeline  =
+		//							=
+		//===========================
 		var time_list = [];
 		var temp_list = [];
-
+		time_list.push("Now");
+		temp_list.push(this.state.temp+"°");
+		
 		var dt = parsed_json['list']['0']['dt'];
 		for (var i = 0; i<9; i++){
 			var timeSuffix = "am";
@@ -481,7 +524,7 @@ export default class Iphone extends Component {
 			time_list.push(element);
 			var temp_hour = Math.round(parsed_json['list'][i]['main']['temp']);
 			temp_list.push(temp_hour+"°");
-			time_list[0]="Now";
+			
 			//document.write(new Date(parsed_json['list'][i]['dt']*1000).toLocaleTimeString());
 			//document.write("\t"+parsed_json['list'][i]['main']['temp']+"\n");
 			
@@ -599,9 +642,9 @@ export default class Iphone extends Component {
 		
 		console.log("icon list: " +future_temp_icon_list);
 		
-		var icon = this.state.future_icon_list&&this.state.future_icon_list.map((item, index) => {
-			return (item);
-		});
+		//var icon = this.state.future_icon_list&&this.state.future_icon_list.map((item, index) => {
+			//return (item);
+		//});
 		
 		var id = "future_icon_" + (0+1).toString();
 		var future_icon_src = document.getElementById(id);

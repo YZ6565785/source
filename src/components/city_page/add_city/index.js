@@ -21,6 +21,10 @@ export default class Addcity extends Component {
 		// button display state
 		this.setState({ display: true });
 	}
+	
+	componentDidMount(){
+		this.fetchWeatherData1();
+	}
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData1 = () => {
