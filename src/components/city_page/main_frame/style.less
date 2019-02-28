@@ -5,7 +5,7 @@
 }
 
 .container { 
-	flex-direction: column;
+
 	background-image: url('../../../assets/backgrounds/sky.jpg');
 	background-size: cover;
 	color: #fff;
@@ -15,6 +15,15 @@
 	margin: 0 auto;
 	overflow: scroll;
 	
+	
+}
+
+.theader {
+	width: 414px;
+	height: 60px;
+	display: flex;
+	flex: 1;
+	position: fixed;
 }
 
 .london {
@@ -26,7 +35,7 @@
 	padding-bottom: 0px;
 	margin-top: 60px;
 	border-radius: 30px;
-	background-image: url('../../../assets/backgrounds/london_c.jpg');
+	background-color: rgba(0,0,0,0.3); 
 	
 
 	
@@ -94,7 +103,7 @@
 
 .header {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	flex: 1;
 }
 
@@ -117,6 +126,145 @@
 	font-weight: 300;
 	letter-spacing: -12px;
 }
+
+
+
+/* The return button*/
+.return {
+  	border: none;
+  	height: 60px;
+  	width: 60px;
+  	text-align: center;
+  	background: url('../../../assets/icons/headericon/return.png') no-repeat;
+  	background-size: 60px 60px;
+  	display: flex;
+  	opacity: 0.7;
+  	border-radius: 20px; 
+  	transition: all 0.3s ease-in-out;
+	margin-right: 0px;
+	
+}
+
+.return:hover {
+  	background: rgba(255, 255, 255, 0.5);
+  	color: #6DA4CC;
+  	border: 1px solid transparent;
+}
+
+
+/* The delete city button*/
+.minus {
+  	border: none;
+  	height: 60px;
+  	width: 60px;
+  	text-align: center;
+  	background: url('../../../assets/icons/headericon/minus.png') no-repeat;
+  	background-size: 60px 60px;
+  	display: flex;
+  	opacity: 0.7;
+  	border-radius: 20px;
+  
+  transition: all 0.3s ease-in-out;
+}
+
+.minus:hover {
+  	background: rgba(255, 255, 255, 0.5);
+  	color: #6DA4CC;
+  	border: 1px solid transparent;
+}
+
+/* The add city button*/
+.add {
+  	border: none;
+  	height: 60px;
+  	width: 60px;
+  	text-align: center;
+  	background: url('../../../assets/icons/headericon/add.png') no-repeat;
+  	background-size: 60px 60px;
+  	display: flex;
+  	opacity: 0.7;
+  	border-radius: 20px;
+  	transition: all 0.3s ease-in-out;
+	float: right
+}
+
+.add:hover {
+  	background: rgba(255, 255, 255, 0.5);
+  	color: #6DA4CC;
+  	border: 1px solid transparent;
+}
+
+.input {
+	
+  	
+	border:2px solid rgba(255,255,255,.1);
+	font-size:1.0em;
+	padding:.25em .5em .3125em;
+	color:rgba(255,255,255,.5);
+	border-radius:.25em;
+	background:transparent;
+	transition:all .100s;	
+	&:focus{
+		outline:none;
+		color:rgba(255,255,255,.75);
+		border-color:rgba(255,255,255,.75);
+	}
+	
+	&.keyup {
+		color:white;
+		border-color:white;
+		text-shadow:0 0 .125em white;
+		box-shadow:0 0 .25em white,inset 0 0 .25em white;
+	}
+	position: relative;
+	top: 13px;
+	
+	
+	
+	
+}
+
+.formm {
+	height: 60px;
+	width: 354px;
+	flex-direction: row;		
+}
+
+.but {
+	-moz-box-shadow: 3px 3px 22px 1px #899599;
+	-webkit-box-shadow: 3px 3px 22px 1px #899599;
+	box-shadow: 3px 3px 22px 1px #899599;
+	background-color:transparent;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	border-radius:15px;
+	border:1px solid #d6bcd6;
+	display:inline-block;
+	cursor:pointer;
+	color:rgba(255,255,255,.75);
+	font-family:Arial;
+	font-size:17px;
+	padding:7px 50px;
+	text-decoration:none;
+	font-weight: bold
+}
+.but:hover {
+	background-color:transparent;
+}
+.but:active {
+	position:relative;
+	top:1px;
+}
+
+.butcond {
+	width: 414px;
+	height: 60px;
+	padding-top: 30px;
+}
+
+
+
+
 
 
 

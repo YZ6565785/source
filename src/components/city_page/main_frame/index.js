@@ -18,48 +18,61 @@ export default class Mainframe extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		// temperature state
-		this.state.temp = "";
-		// button display state
-		this.setState({ display: true });
+		//initial empty city array
+		this.state = {
+			cname: "london",
+			city : []		
+		};			
+		this.handleChange = this.handleChange.bind(this);		
+	}
+		
+	//handle city change 
+	handleChange = e => {
+		 //Prevent referesh the whole page
+		e.preventDefault();
+		this.setState({
+			cname: e.target.city.value
+		});	
+		this.handleAddCity();		
+	} 
+	
+	//handle adding city 
+	handleAddCity = () => {
+		this.setState({
+			city: this.state.city.concat([{ cname: this.state.cname }])
+		});
+	};
+	
+	//method for reset the city_page, remove all city apart from the current located city
+	handleClear = () => {
+		this.setState({
+			city: []
+		});
 	}
 	
-	componentDidMount(){
-		this.fetchWeatherData();
+	componentDidMount (){
+		this.fetchWeatherData ();		
 	}
-	
 
-	
 
 	// a call to fetch weather data via wunderground
-	fetchWeatherData = () => {
-		
+	fetchWeatherData = () => {		
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var urll = "https://api.openweathermap.org/data/2.5/weather?q=London&APPID=09bd58ab01a13c8705892ed88691ee30"
+		var url = "https://api.openweathermap.org/data/2.5/weather?q=london&APPID=09bd58ab01a13c8705892ed88691ee30"
 		$.ajax({
-			url: urll,
+			url: url,
 			dataType: "jsonp",
 			success : this.parseResponse,
-			error : function(req, err){ console.log('API call failed for london' + err); }
-		})
-
-		// once the data grabbed, hide the button
-		
+			error : function(req, err){ console.log('API call failed' + err); }
+		})	
 	}
-	
-	
-
-	
-	
 	
 	// the main render method for the iphone component
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
-		var b = 1;
-		const tempStyles = this.state.temp ? `${style.tem} ${style.filled}` : style.temperature;
-		
-		
+		const tempStyles = this.state.temp ? `${style.tem} ${style.filled}` : style.temperature;	
 		// display all weather data
+		
 		var london_weather = (			
 					
 				<div class = {style.london}>
@@ -78,62 +91,30 @@ export default class Mainframe extends Component {
 						<div class = {tempStyles}>
 							{ this.state.temp }
 						</div>
-					</div>
-					
-		
-				</div>
-
-		
+					</div>		
+				</div>		
 		);
-		
-		
-		
-		
-		
-		var london_weather1 = (			
-					
-				<div class = {style.second}>
-					<div class = {style.left}>
-						<div class={ style.city }>
-							<div class={ style.city }>
-								{ this.state.locate }
-							</div>
-							<div class={ style.time }>
-								{this.state.ctime}
-							</div>									
-						</div>						
-					</div>
-					<div class = {style.right}>
-						<div class = {tempStyles}>
-							{ this.state.temp }
-						</div>
-					</div>
-					
-		
-				</div>
 
-		
-		);
-		
 		
 		return ( 
-			<div class={ style.container } >
-				
-				<Headerbuttons back1 = {this.props.back}/>
-				{london_weather}
-				{london_weather1}
-				
-				<Addcity />
-				
+			<div class ={ style.container } >								
+				<div class = {style.theader}>
+					<button class = {style.return} onclick = {this.props.back}>			
+					</button>
+					<form class = {style.formm} onsubmit = {this.handleChange}>	
+						<input class = {style.input} name = "city" type = "text" placeholder= "             Add city" />			
+						<button class = {style.add}></button>				
+					</form>
+				</div>			
+				{london_weather}				
+				{this.state.city.map((cit, idx) => (<Addcity wname={this.state.name} onChange={this.changeName} onClick={this.handle}  wname = {cit.cname}/>))}
+				<div class ={style.butcond}>
+					<button class = {style.but} type = "button" onclick={this.handleClear} >clear</button>	
+				</div>			
 			</div>
 			
 		);
 	}
-	
-
-	
-	
-
 
 
 	parseResponse = (parsed_json) => {
@@ -165,29 +146,5 @@ export default class Mainframe extends Component {
 		} , 1000);
  
 	}
-	
-	parseResponsep = (parsed_json) => {
-		var locationp = parsed_json['name'];		
-		
-			
-
-		
-		var temp_cp = Math.round(parsed_json['main']['temp']-273.15);
-		var max_temp_cp = Math.round(parsed_json['main']['temp_max']-273.15);
-		var min_temp_cp = Math.round(parsed_json['main']['temp_min']-273.15);
-		var conditionsp = parsed_json['weather']['0']['description'];
-
-		// set states for fields so they could be rendered later on
-		this.setState({
-			locatep: locationp,
-			tempp: temp_cp,
-			max_tempp: max_temp_cp,
-			min_tempp: min_temp_cp,
-			condp : conditionsp,
-			
-		}); 
-	}
-	
-
 
 }

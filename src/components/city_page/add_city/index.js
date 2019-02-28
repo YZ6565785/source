@@ -12,24 +12,28 @@ import Weatherbutton from '../weather_button';
 
 export default class Addcity extends Component {
 //var Iphone = React.createClass({
-
+	
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
 		// temperature state
+		
 		this.state.temp = "";
 		// button display state
-		this.setState({ display: true });
+		this.handleChange = this.handleChange.bind(this);
+
 	}
 	
-	componentDidMount(){
-		this.fetchWeatherData1();
+	handleChange(e) {
+		const cname = e.target.value;
+		this.props.onChange(cname);
 	}
+
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData1 = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "https://api.openweathermap.org/data/2.5/weather?q=Paris&APPID=09bd58ab01a13c8705892ed88691ee30"
+		var url = `https://api.openweathermap.org/data/2.5/weather?q=${this.props.wname}&APPID=09bd58ab01a13c8705892ed88691ee30`
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -38,6 +42,10 @@ export default class Addcity extends Component {
 		})
 		// once the data grabbed, hide the button
 		this.setState({ display: false });
+	}
+	
+	componentDidMount (){
+		this.fetchWeatherData1();
 	}
 	
 	// the main render method for the iphone component
@@ -49,14 +57,14 @@ export default class Addcity extends Component {
 		// display all weather data
 		var city_weather =  (
 				<div>
-					<div class = {style.paris}>
+					<div class = {style.cont}>
 						<div class = {style.left}>
 							<div class={ style.city }>
 								<div class={ style.city }>
 									{ this.state.locate }
 								</div>
 								<div class={ style.time }>
-									{this.state.ctime}
+									{this.state.cond}
 								</div>
 											
 							</div>						
@@ -66,21 +74,8 @@ export default class Addcity extends Component {
 								{ this.state.temp }
 							</div>
 						</div>
-					</div>
-					
-					
-					<div class= { style_iphone.container }> 
-						{ this.state.display ? <Weatherbutton class={ style_iphone.button } clickFunction={ this.fetchWeatherData1 }/ > : null }
-					</div>
+					</div>					
 				</div>
-
-
-				
-
-
-				
-
-
 			
 		);
 		return city_weather;
@@ -111,34 +106,8 @@ export default class Addcity extends Component {
 			cond : conditions,
 			ctime: time
 		}); 
-		setInterval(() => {
-			this.setState({
-				ctime: new Date(Date.now()+3600000).toLocaleTimeString()
-				
-			});
-		} , 1000);
  
 	}
 	
-	parseResponsep = (parsed_json) => {
-		var locationp = parsed_json['name'];		
-		
-			
 
-		
-		var temp_cp = Math.round(parsed_json['main']['temp']-273.15);
-		var max_temp_cp = Math.round(parsed_json['main']['temp_max']-273.15);
-		var min_temp_cp = Math.round(parsed_json['main']['temp_min']-273.15);
-		var conditionsp = parsed_json['weather']['0']['description'];
-
-		// set states for fields so they could be rendered later on
-		this.setState({
-			locatep: locationp,
-			tempp: temp_cp,
-			max_tempp: max_temp_cp,
-			min_tempp: min_temp_cp,
-			condp : conditionsp,
-			
-		}); 
-	}
 }
