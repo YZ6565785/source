@@ -2,11 +2,10 @@
 import { h, render, Component } from 'preact';
 // import stylesheets for ipad & button
 import style from './style';
-import style_iphone from '../weather_button/style_iphone';
+//import style_iphone from '../weather_button/style_iphone';
 // import jquery for API calls
 import $ from 'jquery';
 // import the Button component
-import Weatherbutton from '../weather_button';
 
 
 
@@ -32,8 +31,10 @@ export default class Addcity extends Component {
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData1 = () => {
+
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = `https://api.openweathermap.org/data/2.5/weather?q=${this.props.wname}&APPID=09bd58ab01a13c8705892ed88691ee30`
+		var url = "https://api.openweathermap.org/data/2.5/weather?q="+this.props.wname+"&APPID=daa96efd2e3be69169ef76bff0b6faf2";
+		//https://api.openweathermap.org/data/2.5/weather?q=london&APPID=daa96efd2e3be69169ef76bff0b6faf2
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -56,7 +57,7 @@ export default class Addcity extends Component {
 
 		// display all weather data
 		var city_weather =  (
-				<div>
+				<div onclick = {this.props.click_go}>
 					<div class = {style.cont}>
 						<div class = {style.left}>
 							<div class={ style.city }>
@@ -108,6 +109,7 @@ export default class Addcity extends Component {
 		}); 
  
 	}
+	
 	
 
 }

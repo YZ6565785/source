@@ -25,21 +25,29 @@
 	flex: 1;
 	position: fixed;
 }
-
-.london {
+.cityContainer{
+	display:grid;
+	grid-template-columns: auto;
+	position: absolute;
+	top:10%;
+}
+.eachCity{
 	display: flex;
 	flex-direction: row;
 	background-size: cover;
+	top: 50px;
 	width: 414px;
 	height: 100px;
 	padding-bottom: 0px;
 	margin-top: 60px;
 	border-radius: 30px;
 	background-color: rgba(0,0,0,0.3); 
-	
-
-	
 }
+.eachCity:hover{
+	border: 5px solid white;
+	background-color: rgba(36, 138, 255, 0.657); 
+}
+
 
 .second {
 	display: flex;
@@ -56,7 +64,7 @@
 	display: flex;
 	text-align: left;
 	flex-direction: column;
-	padding bottom: 5px;
+	padding-bottom: 5px;
 	width: 207px;
 	height: 100px;
 	margin-left: 20px;
@@ -257,6 +265,7 @@
 }
 
 .butcond {
+	position: relative;
 	width: 414px;
 	height: 60px;
 	padding-top: 30px;

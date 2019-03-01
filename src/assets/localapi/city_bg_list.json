@@ -1,0 +1,23 @@
+[
+    {
+        "name": "London",
+        "tz": "+0"
+    },
+    {
+        "name": "New York",
+        "tz": "-5"
+    },
+    {
+        "name": "Shanghai",
+        "tz": "+8"
+    },
+    {
+        "name": "Paris",
+        "tz": "+1"
+    },
+    {
+        "name": "Beijing",
+        "tz": "+8"
+    }
+
+]

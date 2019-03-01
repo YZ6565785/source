@@ -1,0 +1,145 @@
+@import '~style/helpers';
+
+.current_weather{
+	position: absolute;
+	top: 13%;
+	display:block;
+	width: calc(414px / 2);
+	z-index: 999 !important;
+	display: flex;
+	flex-direction: column;
+	flex: 2;
+}
+.main {
+	position: absolute;
+	width: calc(414px / 2);
+	z-index: 999 !important;
+	display: flex;
+	flex-direction: column;
+	flex: 2;
+}
+#main_temperature{
+	letter-spacing: normal;
+}
+.indicators{
+	top: 15%;
+	padding-top: 10px;
+	padding-left: 10px;
+	position: absolute;
+	left: 100%;
+	width: calc(414px / 2);
+	z-index: 999 !important;
+	flex-direction: column;
+	flex: auto;
+	text-align: left;
+}
+.indicators_details{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.indicators_icon{
+	left: 0;
+}
+.indicators_content{
+	position: relative;
+	left: 40px;
+	bottom: 10px;
+	display: inline;
+	font-weight: 500;
+}
+.indicators_content_button{
+	position: relative;
+	left: 40px;
+	bottom: 10px;
+	display: inline;
+	font-weight: 500;
+
+}
+.indicators_content_button:hover{
+	
+	color: #6DA4CC;
+	border-bottom: 1px solid white;
+	border-top: 1px solid white;
+	transition: .4s ease-in-out;
+	border-radius: 5px;
+	padding: 2px 2px 2px 2px;
+
+}
+.indicators_content #icon_uv:hover{
+	
+	background: white;
+	border-color: black;
+}
+.conditions {
+	flex: 1;
+	font-size: 1em;
+}
+.uv_box{
+	position: absolute;
+	top:50px;
+	left: 55px;
+	width: 300px;
+	height: 400px;
+	display: inline-block;
+	background-color: white;
+	border-radius: 15px;
+	border: 5px solid grey;
+	z-index: 9999;
+	font-weight: 900;
+}
+.uv_close{
+	
+	font-size: 40px;
+	position: absolute;
+	top:40px;
+	left: 330px;
+	width: 40px;
+	height: 40px;
+	color:white;
+	background: grey;
+	display: inline-block;
+	font-weight: bold;
+	text-align: center;
+	padding: 5px 5px 5px 5px;
+	border-radius: 25px;
+	border: 1px solid black;
+	z-index: 99999;
+	
+}
+.uv_close:hover{
+	
+	background: white;
+	border-color: white;
+}
+.uv_close p{
+	
+	font-size: 30px;
+	position: relative;
+	bottom: 16px;
+	color: white;
+	display: inline;
+	font-weight: bold;
+	z-index: 99999;
+	
+}
+.uv_info_content{
+	width: 300px;
+	height: 400px;
+	display: block;
+	color: black;
+	z-index: 999999;
+}
+.uv_info_list{
+	position: relative;
+	right: 30px;
+	margin-top: 20px;
+	margin-left: 50px;
+	margin-right: 50px;
+	border-radius: 10px;
+	height: 30px;
+	text-align: center;
+}
+.uv_info_list p{
+	color:black;
+	word-spacing: 0.5em;
+}
