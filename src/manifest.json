@@ -1,6 +1,6 @@
 {
-  "name": "Preact PWA",
-  "short_name": "Preact PWA",
+  "name": "Weather Mood",
+  "short_name": "Weather",
   "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",

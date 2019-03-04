@@ -23,35 +23,63 @@ export default class Iphone extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		this.setState({ 
+		this.setState({
+			//simulate a GPS location, this set the default current loaction is always London
+			gps_locate: "London",
 			//default main (curent) temperature 
 			temp: "",
 			//default weather condition
 			cond: "",
 			//default location
-			locate: "Shanghai",
+			locate: "London",
 			//default page display
 			display: true,
 			//default below area display
 			showBelow: true,
 			//default input city
-			city: 'Shanghai',
+			city: 'London',
 			//default page pointer
 			onHomepage: true,
 			//default geographical location
 			city_geo: [51.509865, -0.118092]
 		});
 		// end of the initialization
+
+		//loading the localstorage
+		if(localStorage.getItem("homepage_city") != null && localStorage.getItem("homepage_lon") != null && localStorage.getItem("homepage_lat") != null){
+			this.setState({
+				locate: localStorage.getItem("homepage_city"),
+				city_geo: [localStorage.getItem("homepage_lon"), localStorage.getItem("homepage_lat")],
+				city: localStorage.getItem("homepage_city")
+			});
+		}
+		else{
+			localStorage.setItem("homepage_city", this.state.locate);
+			localStorage.setItem("homepage_lon", this.state.city_geo[0]);
+			localStorage.setItem("homepage_lat", this.state.city_geo[1]);
+		}
 	}
 	
 	//fetch weather data once and generate the weather of future days
 	componentDidMount =() =>{
 		this.fetchWeatherData();
+		if (localStorage.getItem("version") == null || localStorage.getItem("version") < "1.3"){
+			setTimeout(
+				function() {
+					alert("New version updated (04/Mar/2019) Now: version 1.3.\nPrevious updates:\n#v1.2\nThis version fixed the bugs that are included \"not holding the cities saved\", etc.\n\n#v1.3\nNew: \n\t-significant performance optimizations.\n\t-more musics joined in the library.\n\t-world clocks are supported for each city.");
+				}
+				.bind(this),
+				3000
+			);
+			localStorage.setItem("version","1.3");
+			localStorage.removeItem("city_history");
+		}
 	}
+	
 	//connect with a local api to check if the city is existing in the database
 	checkCity= () =>{
 		$.ajax({
-			url: "assets/localapi/city.list.json",
+			url: "https://raw.githubusercontent.com/YZ6565785/world_city_list/master/city.list.json",
 			dataType: "json",
 			success : this.getData_city,
 			error : function(req, err){ 
@@ -87,15 +115,15 @@ export default class Iphone extends Component {
 	}
 	// fetch the weather data from openweathermap api
 	fetchWeatherData = () => {
-		var cityId = this.state.city;
+		var cityId = this.state.locate;
 		var geo = this.state.city_geo;
 		//var link = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=09bd58ab01a13c8705892ed88691ee30";
 		//https://tile.openweathermap.org/map/{temp_new}/{3}/{10}/{10}.png?appid={09bd58ab01a13c8705892ed88691ee30}
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
 		
-		var url_today = "http://api.openweathermap.org/data/2.5/weather?q="+cityId+"&units=metric&APPID=daa96efd2e3be69169ef76bff0b6faf2";
-		var url_timeline = "http://api.openweathermap.org/data/2.5/forecast?q="+cityId+"&units=metric&APPID=daa96efd2e3be69169ef76bff0b6faf2";
-		var url_uv = "http://api.openweathermap.org/data/2.5/uvi?&lon="+geo[0]+"&lat="+geo[1]+"&APPID=daa96efd2e3be69169ef76bff0b6faf2";
+		var url_today = "http://api.openweathermap.org/data/2.5/weather?q="+cityId+"&units=metric&APPID=09bd58ab01a13c8705892ed88691ee30";
+		var url_timeline = "http://api.openweathermap.org/data/2.5/forecast?q="+cityId+"&units=metric&APPID=09bd58ab01a13c8705892ed88691ee30";
+		var url_uv = "http://api.openweathermap.org/data/2.5/uvi?&lon="+geo[0]+"&lat="+geo[1]+"&APPID=09bd58ab01a13c8705892ed88691ee30";
 	  	//url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=daa96efd2e3be69169ef76bff0b6faf2"
 		// john api: 09bd58ab01a13c8705892ed88691ee30
 		//http://api.openweathermap.org/data/2.5/uvi?&lat=2.35236&lon=48.856461&APPID=09bd58ab01a13c8705892ed88691ee30
@@ -153,12 +181,16 @@ export default class Iphone extends Component {
 					sunset = {this.state.sunset}
 					clock = {this.state.clock}
 					locate = {this.state.locate}
+					icon_uv_id = {"icon_uv"}
 					/>
 					<HomepageFuture 
 					id = "below_area"
-					timeline_table = {this.timeline_table()} 
+
+					future_table_id = "below_future_table"
 					future_temp = {this.state.future_temp}
 					future_icon_list = {this.state.future_icon_list}
+					timeline_time = {this.state.timeline_time}
+					timeline_temp = {this.state.timeline_temp}
 					 />
 					
 					<MusicRecommendation 
@@ -171,12 +203,18 @@ export default class Iphone extends Component {
 					/>
 				</span>}
 				{this.state.display ? null : <div id = {"cityManage"} class = {style.cityManage} >
-					<Mainframe back = {this.back_to_home} onClick ={this.doCityClick} locate = {this.state.locate} />
-					cityInput
-					button_go
+					<Mainframe 
+					back = {this.back_to_home}
+					goToCityPage = {this.goToCityPage}
+					onClick ={this.doCityClick} 
+					locate = {this.state.locate}
+					lon = {this.state.city_geo[0]}
+					lat = {this.state.city_geo[1]}
+					onTheHomepage ={this.state.onHomepage}
+					  />
 					
-					<div class = {style.cityInput}>
-					<form onsubmit ={this.handleSubmit} style ="display: none"> 
+					<div class = {style.cityInput} style ="display: none">
+					<form onsubmit ={this.handleSubmit} > 
 						<label htmlFor="city">City: </label>
 						<input class ={style.input_box_city} 
 						type="text" name="city" 
@@ -188,7 +226,7 @@ export default class Iphone extends Component {
 						value ="Go" 
 						>GO</button>
 					</form>
-					<h3 class = {style.cityManage_chosenCity}>Current city: {this.state.city}</h3>
+					<h3 style ="display: none" class = {style.cityManage_chosenCity}>Current city: {this.state.city}</h3>
 					</div>
 				</div>
 				}
@@ -200,9 +238,13 @@ export default class Iphone extends Component {
 		
 		
 	}
-	doCityClick = city_chosen =>{
-		console.log("you clicked the button with "+ city_chosen);
-		this.setState({ city: city_chosen });
+	doCityClick = (city_chosen,lon,lat) =>{
+		localStorage.setItem("homepage_city", city_chosen);
+		localStorage.setItem("homepage_lon", lon);
+		localStorage.setItem("homepage_lat", lat);
+		//console.log("you clicked the button with "+ city_chosen,lon,lat);
+		var geo = [lon, lat];
+		this.setState({ locate: city_chosen, city_geo: geo});
 		this.fetchWeatherData();
 		this.back_to_home();
 	}
@@ -265,12 +307,11 @@ export default class Iphone extends Component {
 		
 		//this.musicRecommendation();
 		if(this.state.onHomepage){
+			$("#below_future_table").empty();
 			require("jquery-ui/ui/effects/effect-slide");
 			this.setState({onHomepage: false});
 			$("#backgroundBlur").hide(1000);
 			$("#cityManage").show("slide", {direction: "right"},10);
-			
-			
 		}
 		else{
 			require("jquery-ui/ui/effects/effect-slide");
@@ -278,85 +319,21 @@ export default class Iphone extends Component {
 			$("#backgroundBlur").show(1000);
 			$("#cityManage").hide("slide", {direction: "right"}, 500);
 		}
-		
-		
 	}
 	back_to_home = ()=>{
+		$("#below_future_table").empty();
 		if(!this.state.onHomepage){
 			this.setState({onHomepage: true});
 			$("#backgroundBlur").show(10);
 			//$("#cityManage").toggle(1000);
 			$("#cityManage").hide(500);
+			
 		}
 		
 		
 	}
-	timeline_table = () =>{
-		let table = [];
 
-		// Outer loop to create parent
-		let time = [];
-		let temp = [];
-		//Inner loop to create children
-		time.push(this.state.timeline_time&&this.state.timeline_time.map((item, index) => {
-			return (<td id = { style.timeline_time } key={`${index}`}>{item}{"  "} </td>);
-		}));
-		
-		//Create the parent and add the children
-		table.push(<tr>{time}</tr>);
-		
-		temp.push(this.state.timeline_temp&&this.state.timeline_temp.map((item, index) => {
-			return (<td id = { style.timeline_temp } key={`${index}`}>{item}</td>);
-		}));
-		table.push(<tr>{temp}</tr>);
-		//console.log(this.state.time_list);
-		return table;
-		
-		
-	}
-
-	//=================================
-	//							      =
-	// generate the future table temp =
-	//							      =
-	//=================================
-	future_table = () =>{
-		var day_sec = Date.now()
-		var day ="";
-		var day_list = ["Tomorrow"]
-		let table =[];
-		let row_1=[];
-		let row_2=[];
-		//Inner loop to create children
-		this.state.future_temp&&this.state.future_temp.map((obj, index) => {
-			day_sec += 60*60*24*1000;
-			//console.log("##############: " + day_sec);
-			day_list.push(new Date(day_sec).toLocaleDateString().substring(0,5));
-			if (index <=2){
-				row_1.push(
-					<td class ={style.future_box} key={`${obj.min}`}>
-					<p class = {style.future_temp}>{obj.min}/<span id = {style.future_temp_max}>{obj.max}</span></p>
-					<img id = {"future_icon_"+(index+1).toString()} class ={style.future_icons} alt="future icons" width= "50" height = "50" />
-					<div id = {"future_day_"+(index+1).toString()}>{day_list[index]}</div>
-				</td>);
-			}
-			else{
-				row_2.push(<td class ={style.future_box} key={`${obj.min}_{obj.max}`}>
-				<p class = {style.future_temp}>{obj.min}/<span id = {style.future_temp_max}>{obj.max}</span></p>
-				<img id = {"future_icon_"+(index+1).toString()} class ={style.future_icons} alt="future icons" width= "50" height = "50" />
-				<div id = {"future_day_"+(index+1).toString()}>{day_list[index]}</div>
-					</td>);
-			}
-				
-		});
-		//Create the parent and add the children
-		table.push(<tr>{row_1}</tr>);
-
-		//Create the parent and add the children
-		table.push(<tr>{row_2}</tr>);
-		//console.log(this.state.time_list);
-		return <table id ={"below_future_table"}>{table}</table>;
-	}
+	
 	
 	
 	parseResponse_uv = (parsed_json) => {
@@ -383,6 +360,12 @@ export default class Iphone extends Component {
 	}
 	
 	parseResponse_today = (parsed_json) => {
+		// setting up the mian temp first, due to this state wiil be used by other related variables
+		var temp_c = Math.round(parsed_json['main']['temp']);
+		this.setState({
+			temp: temp_c,
+
+		});
 		var location = parsed_json['name'];
 		var currentTime = new Date(Date.now()).toLocaleTimeString();
 		// wind data in future api
@@ -431,7 +414,7 @@ export default class Iphone extends Component {
 		
 		
 
-		var temp_c = Math.round(parsed_json['main']['temp']);
+		
 		var conditions = parsed_json['weather']['0']['description'];
 		var condition_main = parsed_json['weather']['0']['main'];
 		
@@ -441,10 +424,9 @@ export default class Iphone extends Component {
 		//showing each weather icon depends on the API feedback[weather.main]
 		var weather_list = ["Sun", "Rain", "Snow", "Clouds","Clear"];
 		var icon_src = document.getElementById("main_icon");
-		
 		//console.log(weather_icon_id);
 		var setIcon = require('./setIcon/index.js');
-		setIcon.setUpIcons(weather_icon_id,icon_src);
+		icon_src.src = setIcon.setUpIcons(weather_icon_id);
 		
 		
 		//=============================
@@ -459,7 +441,6 @@ export default class Iphone extends Component {
 		this.setState({
 			
 			locate: location,
-			temp: temp_c,
 			main: condition_main,
 			cond : conditions,
 			clock: currentTime,
@@ -470,6 +451,7 @@ export default class Iphone extends Component {
 			sunset: sunset
 			
 		});
+		//console.warn("setting up the firs main temp");
 		this.setState( {
 			clock: new Date(Date.now()).toLocaleTimeString()
 		} );
@@ -524,7 +506,7 @@ export default class Iphone extends Component {
 		//console.log(wind_deg);
 		var wind_direction = "";
 		//var wind_dirction = ["N", "NE", "E", "SE", "SW", "W", "NW"]
-		if (wind_deg > 340 && wind_deg <= 10){
+		if (wind_deg > 340 || wind_deg <= 10){
 			wind_direction = "N";
 		}
 		else if (wind_deg > 10 && wind_deg <= 70){
@@ -597,10 +579,6 @@ export default class Iphone extends Component {
 				future_temp_list.push({"min": day_min+"°", "max": day_max+"°"});
 				future_temp_icon_list.push(icon_id);
 			}
-
-			//console.log("i: " + i + ", temp: " +Math.round(parsed_json['list'][i]['main']['temp'])+", time: "+day_time.split(' ')); 
-
-			// set icons for future weather
 			
 		}
 		
@@ -609,28 +587,10 @@ export default class Iphone extends Component {
 			future_temp_list.push({"min": 0+"°", "max": 0+"°"});
 			future_temp_icon_list.push("-1");
 		}
+		console.log("now it is now: => "+ this.state.locate);
+		//console.log("city: "+this.state.locate+ ", future temp list: "+ future_temp_list);
 		
-		//console.log(future_temp_list);
-		
-		//for(var key in time) { console.log(key); }
-		
-		this.setState({
-			timeline_time: time_list,
-			timeline_temp: temp_list,
-			future_temp: future_temp_list,
-			future_icon_list: future_temp_icon_list,
-			//wind due to today api err
-			wind: wind
-		});
-		//delay of the main temp, adding later...
-		temp_list.splice(0,0,this.state.temp+"°");
-		
-		//console.log("icon list: " +future_temp_icon_list);
-		
-		//var icon = this.state.future_icon_list&&this.state.future_icon_list.map((item, index) => {
-			//return (item);
-		//});
-		
+
 		var id = "future_icon_" + (0+1).toString();
 		var future_icon_src = document.getElementById(id);
 		//future_icon_src.src = "../assets/icons/moon.png";
@@ -639,6 +599,23 @@ export default class Iphone extends Component {
 		console.log("message from Message.js:" + msg.sayHelloInSpanish());
 		var obj = new Message();
 		console.log("obj from Message.js:" + obj.state.message);
+
+
+
+		//console.warn("setting up the firs temp of timeline");
+		temp_list.splice(0,0,this.state.temp+"°");
+
+		this.setState({
+			timeline_temp: temp_list,
+			future_icon_list: future_temp_icon_list,
+			future_temp: future_temp_list,
+			timeline_time: time_list,
+			//wind due to today api err
+			wind: wind
+		});
+		
+
+
 	}// end of timeline api
 	
 }

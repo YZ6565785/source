@@ -5,42 +5,73 @@ export default class Clock extends Component{
 		super(props);
 		this.setState( {
             time: new Date(Date.now()).toLocaleTimeString(),
-            timezone: "",
-            timeoff: 0
+            timezone: "0",
+            timeoff: 0,
+            support: true
         } );
         //alert("clock location: " + this.props.locate);
+        this.connect();
     }
+    clock = 0;
     componentDidMount =() =>{
-        this.startClock();
+        this.connect();
+        this.clock = setInterval(() =>{
+            this.setState( {
+                time: new Date(Date.now()+this.state.timeoff).toLocaleTimeString("en-US")
+            } );
+        },1000);
         
+    }
+    componentDidUpdate=(nextProps)=>{
+        if(this.props.locate != nextProps.locate){
+            console.warn("this: "+ this.props.locate);
+            console.warn("next: "+ nextProps.locate);
+            this.connect();
+        }
     }
 	render(){
 		return (
-            <div>{this.state.time}</div>
+            <div>
+                {this.state.support? <div id ="clock" name = {this.props.locate}>{this.state.time}</div> : null}
+            </div> 
         );
     }
-    startClock = () => {
-        setInterval(() =>{
-            this.setState( {
-                time: new Date(Date.now()+this.state.timeoff).toLocaleTimeString()
-            } );
-        },1000);
+    connect= () =>{
+		$.ajax({
+			url: "assets/localapi/city_bg_list.json",
+			dataType: "json",
+			success : this.getData_tz,
+			error : function(req, err){ 
+				console.log('city not found ' + err); 
+			}
+		});
     }
-    getTimezone =() => {
+    
+    // set not found as default
+    getData_tz =(parse_json) =>{
+        var result = false;
+        var timezone ="";
+		for (var i =0; i<parse_json.length;i++){
+			if (parse_json[i]["name"] == this.props.locate){
+				timezone = parse_json[i]["tz"];
+				result = true;
+				break;
+			}
+		}
+		// if the city is found call the api to fetch weather
+		if(result){
+            this.setState({
+                timezone: timezone,
+                timeoff: parseInt(timezone)*60*60*1000,
+                support: true
+            });
+        }
+        else{
+            this.setState({
+                support: false
+            });
+        }
         
-        $.getJSON("assets/city_bg_list.json", function(data){
-			$.each(data, function(key,val){
-				if(val.name ==currentLocation){
-                    this.setState({
-                        timezone: val.tz,
-                        timeoff: parseInt(this.state.timezone)*360000
-                    });
-                    console.log("sadfasdfasdfsadsadfadsfadsfasdf", this.state.timeoff);
-					return false;
-				}
-				console.log("test each loop: " + val.name);
-			})
-		})
     }
 	
 }

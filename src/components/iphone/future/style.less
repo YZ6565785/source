@@ -14,10 +14,19 @@
 	border-left: 1px;
 	border-right:1px;
 }
+
 .timeline_table{
 	width: 700px;
 }
-
+#timeline_time{
+	font-size: 18px;
+	font-family: courier;
+}
+#timeline_temp{
+	font-size: 20px;
+	font-family: courier;
+	
+}
 .futureContainer{
 	position: relative;
 	top: 415px;
@@ -29,9 +38,11 @@
 	display: grid;
 	grid-template-columns: auto auto auto;
 	grid-template-rows: auto auto;
+	overflow: hidden;
 	grid-row-gap: 2px;
 	grid-column-gap: 2px;
 	padding-top: 5px;
+	
 }
 .future_box{
 	//border: 2px solid red;
@@ -39,6 +50,7 @@
 	height: 140px;
 	width: 137px;
 	padding: 5px 35px 5px 35px;
+
 }
 
 .future_temp{

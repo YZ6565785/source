@@ -6,7 +6,7 @@ import style from './style';
 // import jquery for API calls
 import $ from 'jquery';
 // import the Button component
-
+import Clock from 'components/iphone/clock';
 
 
 export default class Addcity extends Component {
@@ -18,28 +18,22 @@ export default class Addcity extends Component {
 		// temperature state
 		
 		this.state.temp = "";
-		// button display state
-		this.handleChange = this.handleChange.bind(this);
-
 	}
 	
-	handleChange(e) {
-		const cname = e.target.value;
-		this.props.onChange(cname);
-	}
+	
 
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData1 = () => {
 
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "https://api.openweathermap.org/data/2.5/weather?q="+this.props.wname+"&APPID=daa96efd2e3be69169ef76bff0b6faf2";
+		var url = "https://api.openweathermap.org/data/2.5/weather?q="+this.props.wname+"&APPID=09bd58ab01a13c8705892ed88691ee30";
 		//https://api.openweathermap.org/data/2.5/weather?q=london&APPID=daa96efd2e3be69169ef76bff0b6faf2
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
 			success : this.parseResponse,
-			error : function(req, err){ console.log('API call failed for the city' + err); }
+			error : function(req, err){ console.log('add city API call failed for the city' + err); }
 		})
 		// once the data grabbed, hide the button
 		this.setState({ display: false });
@@ -53,17 +47,28 @@ export default class Addcity extends Component {
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		var b = 1;
-		const tempStyles = this.state.temp ? `${style.tem} ${style.filled}` : style.temperature;
-
+		let delete_button = null;
+		if(this.props.delete_value != this.props.home_city){
+			delete_button = <button 
+				id = "city_check"
+				class ={this.props.delete_class} 
+				name = "city" 
+				onclick={this.props.delete_onChange} 
+				value ={this.props.delete_value}
+				>
+				Delete
+			</button>
+		}
 		// display all weather data
 		var city_weather =  (
-				<div onclick = {this.props.click_go}>
-					<div class = {style.cont}>
-						<div class = {style.left}>
+					<div class = {style.cont} >
+						<div class = {style.left} onclick = {this.props.click_go}>
 							<div class={ style.city }>
+								
 								<div class={ style.city }>
 									{ this.state.locate }
 								</div>
+								<div class={ style.time }><Clock locate ={this.state.locate} /></div>
 								<div class={ style.time }>
 									{this.state.cond}
 								</div>
@@ -71,12 +76,16 @@ export default class Addcity extends Component {
 							</div>						
 						</div>
 						<div class = {style.right}>
-							<div class = {tempStyles}>
-								{ this.state.temp }
+							<div class = {`${this.props.each_city_temp_class} ${style.tem} ${style.filled}`} onclick = {this.props.click_go}>
+							
+							
+							{ this.state.temp }
+							
 							</div>
 						</div>
+						
+						{delete_button}
 					</div>					
-				</div>
 			
 		);
 		return city_weather;

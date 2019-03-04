@@ -81,7 +81,7 @@ export default class HomepageCurrent extends Component{
 					<div class = {style.indicators_details}>
 						<img class = {style.indicators_icon} src = "assets/icons/uv.png" alt="uv icon" width ="30" height = "30" />
 						<p  class = {style.indicators_content}>{this.props.uv }</p>
-						<p id ={"icon_uv"} class = {style.indicators_content_button } onclick ={this.getUVInfo}>{this.props.status }</p>
+						<p id ={this.props.icon_uv_id} class = {style.indicators_content_button } onclick ={this.getUVInfo}>{this.props.status }</p>
 					</div>
 					
 					<div class = {style.indicators_details}>

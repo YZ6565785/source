@@ -2,71 +2,85 @@
     {
         "song": "Hollowed",
         "artist": "Flybear",
-        "type": "5"
+        "type": "5",
+        "href": "https://geo.itunes.apple.com/us/album/hollowed/1206487779?i=1206487913&mt=1&app=music"
     },
     {
         "song": "Natural Fool",
-        "artist": "Protraits",
-        "type": "1"
+        "artist": "Maribou",
+        "type": "1",
+        "href": "https://geo.itunes.apple.com/us/album/natural-fools/965835276?i=965835288&mt=1&app=music"
     },
     {
         "song": "Across the Room",
         "artist": "ODESZA",
-        "type": "2"
+        "type": "2",
+        "href": "https://geo.itunes.apple.com/us/album/across-the-room-feat-leon-bridges/1240361817?i=1240362784&mt=1&app=music"
     },
     {
         "song": "I Know",
         "artist": "Astronauts, etc.",
-        "type": "3"
+        "type": "3",
+        "href": "https://geo.itunes.apple.com/us/album/i-know/986583025?i=986583032&mt=1&app=music"
     },
     {
         "song": "Truth is Light",
         "artist": "Joe Goddard",
-        "type": "4"
+        "type": "4",
+        "href": "https://geo.itunes.apple.com/us/album/truth-is-light/1195859704?i=1195859970&mt=1&app=music"
     },
     {
         "song": "Movements",
         "artist": "City Clam Down",
-        "type": "5"
+        "type": "5",
+        "href": "https://geo.itunes.apple.com/us/album/movements/565948351?i=565948359&mt=1&app=music"
     },
     {
         "song": "Never Lost",
         "artist": "Amtrac",
-        "type": "1"
+        "type": "1",
+        "href": "https://geo.itunes.apple.com/us/album/never-lost/1197692842?i=1197692857&mt=1&app=music"
     },{
         "song": "Relax",
         "artist": "Young Jack & Tizzy T",
-        "type": "0"
+        "type": "0",
+        "href": "https://geo.itunes.apple.com/us/album/relax/1444636535?i=1444636699&mt=1&app=music"
     },
     {
         "song": "Crazy for You",
         "artist": "Ryan.B",
-        "type": "3"
+        "type": "3",
+        "href": "https://geo.itunes.apple.com/us/album/crazy-for-you/1449953554?i=1449953555&mt=1&app=music"
     },
     {
         "song": "A Lame Song",
         "artist": "Chefs and Actors",
-        "type": "5"
+        "type": "5",
+        "href": "https://geo.itunes.apple.com/us/album/a-lame-song/1450492241?i=1450492242&mt=1&app=music"
     },
     {
-        "song": "BLood Moon",
+        "song": "Blood Moon",
         "artist": "Vinida",
-        "type": "2"
+        "type": "2",
+        "href": "https://geo.itunes.apple.com/us/album/blood-moon/1445437706?i=1445437959&mt=1&app=music"
     },
     {
         "song": "I Never Know You Come to My Life",
-        "artist": "P...",
-        "type": "4"
+        "artist": "Prism",
+        "type": "4",
+        "href": "https://geo.itunes.apple.com/us/album//1447802992?mt=1&app=music"
     },
     {
-        "song": "LOVE is NEARBY",
-        "artist": "Angie Shum",
-        "type": "4"
+        "song": "Alaska (Tycho Remix)",
+        "artist": "Maggie Rogers",
+        "type": "4",
+        "href": "https://geo.itunes.apple.com/us/album/alaska-tycho-remix/1249136133?i=1249136134&mt=1&app=music"
     },
     {
         "song": "Wintertime",
         "artist": "Norah Jones",
-        "type": "4"
+        "type": "4",
+        "href": "https://geo.itunes.apple.com/us/album/wintertime/1441064644?i=1441064842&mt=1&app=music"
     }
 
 ]

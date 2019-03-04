@@ -12,7 +12,8 @@ export default class MusicRecommendation extends Component{
 		this.setState({
 			main: this.props.weather_cond,
 			current_list: arr,
-			display: false
+			display: false,
+			color: ""
 		});
 		//console.log("gggggggggg", this.state.main);
 	}
@@ -25,9 +26,16 @@ export default class MusicRecommendation extends Component{
 
 			<div  id ="musicRecommendation" class ={style.musicRecommendation}>
 				<span class ={style.music}>
-				<div id ="weather">Now the weather is {this.props.weather_cond}.</div>
-				<img src = "assets/icons/musicIcon_white.png" width="20" height ="20" alt = "music icon" /><h3>Music</h3>
-				{list}
+				
+				<div>
+					<div id ="weather">
+						Now the weather is {this.props.weather_cond}.
+					</div>
+					<img src = "assets/icons/musicIcon_white.png" width="20" height ="20" alt = "music icon" /><h3>Music</h3>
+				</div>
+				
+				<div class = {style.mucic_container}>{list}</div>
+				
 				</span>
 				
 			</div> 
@@ -49,9 +57,9 @@ export default class MusicRecommendation extends Component{
 		if (show){
 			this.props.hiding();
 			this.showing_musicRecommendation();
-			button.style.top = "370px";
+			button.style.top = "0";
 			button.style.background = "#0000";
-			button.style.height = "360px";
+			button.style.height = "736px";
 			var main = this.props.getWeather();
 			//console.log("main: ===> " + main);
 			this.getMusic(main);
@@ -60,16 +68,38 @@ export default class MusicRecommendation extends Component{
 		else{
 			this.props.showing();
 			this.hiding_musicRecommendation();
-			button.style.top = "96%";
-			button.style.height = "27px";
+			button.style.top = "95%";
+			button.style.height = "37px";
 			button.style.background = "#6DA4CC";
-			
 			content.style.marginTop = "0";
 			content.style.color ="white";
 			$("#refresh").hide();
 			
 		}
 		//this.setState({showBelow: false});
+	}
+	refresh = () =>{
+		
+		function getRandomInt(max) {
+			return Math.floor(Math.random() * Math.floor(max));
+		}
+		var code_list = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"];
+		var start_position =1;
+		var color = "#";
+		for (var i = 0; i < 6; i ++){
+			var index = getRandomInt(16);
+			color = color + code_list[index];
+		}
+		this.setState({color: color.substring(1)});
+		$('.music_line').animate({
+			color: color,
+		});
+		$('#content_id').animate({
+			color: color,
+			transition: "1s"
+		});
+		
+		this.getMusic();
 	}
 	hiding_musicRecommendation = () =>{
 		require("jquery-ui/ui/effects/effect-slide");
@@ -90,36 +120,23 @@ export default class MusicRecommendation extends Component{
 		let row_1=[];
 		//Inner loop to create children
 		this.state.current_list&&this.state.current_list.map((obj, index) => {
-				row_1.push(
-					<li class ="music_line" key={`${obj.name}`}>{obj.name } - {obj.artist}</li>);
+			const link = <a href= {obj.href} style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/embed/v1/app-icon.svg) no-repeat;width:40px;height:40px;"></a>;
+			var show = true;
+			if (obj.artist == " 👍"){
+				show = false;
+			}
+			row_1.push(
+				<li class ="music_line" key={`${obj.name}`}>
+						{show? link: null}
+						<div id ={style.music_name}>{obj.name }</div>
+						<div id ="mucis_artist"> - {obj.artist}</div>
+						
+				</li>);
 		});
 		
 		return <ul class ={style.music_ul}>{row_1}</ul>;
 	}
-	refresh = () =>{
-		
-		function getRandomInt(max) {
-			return Math.floor(Math.random() * Math.floor(max));
-		}
-		var code_list = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"];
-		var start_position =1;
-		var color = "#";
-		for (var i = 0; i < 6; i ++){
-			var index = getRandomInt(16);
-			color = color + code_list[index];
-		}
-		//console.log("color: "+ color);
-
-		
-		$('.music_line').animate({
-			color: color,
-		});
-		var button = document.getElementById("content_id");
-		button.style.marginTop = "-178px";
-		button.style.color ="red";
-		button.style.transition ="1s";
-		this.getMusic();
-	}
+	
 	getMusic =(main)=>{
 		
 		//console.log("random number: " + Math.ceil(Math.random()*10));
@@ -190,7 +207,7 @@ export default class MusicRecommendation extends Component{
 			var obj = parse_json[i];
 			if (opt == obj.type){
 				count ++;
-				arr.push({name:obj.song, artist: obj.artist});
+				arr.push({name:obj.song, artist: obj.artist, href: obj.href});
 				
 				if (count ==6){
 					break;
