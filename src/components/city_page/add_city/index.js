@@ -1,11 +1,10 @@
 // import preact
 import { h, render, Component } from 'preact';
-// import stylesheets for ipad & button
+// import stylesheets for the city display
 import style from './style';
-//import style_iphone from '../weather_button/style_iphone';
 // import jquery for API calls
 import $ from 'jquery';
-// import the Button component
+// import clock for the city
 import Clock from 'components/iphone/clock';
 
 
@@ -19,14 +18,11 @@ export default class Addcity extends Component {
 		
 		this.state.temp = "";
 	}
-	
-	
-
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData1 = () => {
 
-		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
+		// API URL for the weather information
 		var url = "https://api.openweathermap.org/data/2.5/weather?q="+this.props.wname+"&APPID=09bd58ab01a13c8705892ed88691ee30";
 		//https://api.openweathermap.org/data/2.5/weather?q=london&APPID=daa96efd2e3be69169ef76bff0b6faf2
 		$.ajax({
@@ -39,14 +35,15 @@ export default class Addcity extends Component {
 		this.setState({ display: false });
 	}
 	
+	//immediately invoked after the component is mounted
 	componentDidMount (){
 		this.fetchWeatherData1();
 	}
 	
-	// the main render method for the iphone component
+	// the main render method for the city component
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
-		var b = 1;
+		
 		let delete_button = null;
 		if(this.props.delete_value != this.props.home_city){
 			delete_button = <button 

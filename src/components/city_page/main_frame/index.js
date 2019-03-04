@@ -1,25 +1,29 @@
 // import preact
 import { h, render, Component } from 'preact';
-import {Progress} from 'preact-progress';
 // import stylesheets for ipad & button
 import style from './style';
-//import style_iphone from '../weather_button/style_iphone';
 // import jquery for API calls
 import $ from 'jquery';
-// import the Button component
-//import Weatherbutton from '../weather_button';
-
-//import Headerbuttons from '../header_buttons';
+// import add_city 
 import Addcity from 'components/city_page/add_city';
+// import clock for the city added 
 import Clock from 'components/iphone/clock';
+
+
+//main frame component for city page
 export default class Mainframe extends Component {
+	
 	// a constructor with initial set states
 	constructor(props){
 		super(props); 
-		console.log("constructor");
+		//console.log("constructor");
 		
 		var current_city = this.props.locate;
+		
+		//call the method fo setting the state for the city
 		this.set_city();
+		
+		//initial states 
 		this.setState({
 			editing: false,
 			loading: true,
@@ -31,13 +35,11 @@ export default class Mainframe extends Component {
 		});
 
 		//this.setDefault_localCityList();
-		console.log("now: "+ this.state.city);
-		this.handleChange = this.handleChange.bind(this);	
-		
-
-
-		
+		//console.log("now: "+ this.state.city);
+		this.handleChange = this.handleChange.bind(this);			
 	}
+	
+	//set initial running states, get all saved cities' information
 	setDefault_localCityList=()=>{
 		if(localStorage.getItem("city_saved") !=null){
 			var localCityList = localStorage.getItem("city_saved").split("/");
@@ -54,13 +56,18 @@ export default class Mainframe extends Component {
 			
 		
 	}
+	
+	//immediately invoked after the component is mounted
 	componentDidMount =() =>{
 		//set defaul city if the user is new
 		this.notEditing();
-		console.log(this.state.city);
+		//console.log(this.state.city);
 		this.setState({editing: false});
+		
+		//call to get wather information from api
 		this.fetchWeatherData ();
-
+		
+		//check if any city information is saved
 		if(localStorage.getItem("city_saved") !=null){
 			this.state = {
 				city: []
@@ -79,7 +86,8 @@ export default class Mainframe extends Component {
 			
 		}
 	}
-
+	
+	//update invoked after the component is mounted
 	componentDidUpdate=(nextProps, nextState)=>{
 		if(nextState.city != undefined){
 			if (this.state.city.length > nextState.city.length){
@@ -98,6 +106,8 @@ export default class Mainframe extends Component {
 		}
 		
 	}
+	
+	//less/css: when not edidting
 	notEditing=()=>{
 
 		$("#edit").css("color", "white");
@@ -106,6 +116,8 @@ export default class Mainframe extends Component {
 		this.notTyping();
 		//this.setState({editing: false});
 	}
+	
+	//less/css: when editing
 	isEditing=()=>{
 		$("#save").css("color", "green");
 		$("#edit").text("Delete all");
@@ -114,15 +126,20 @@ export default class Mainframe extends Component {
 		$(".select").show();
 		this.isTyping();
 	}
+	
+	//less/css: when typing
 	isTyping =()=>{
 		$("#search").show();
 		$("#pointer").hide();
 
 	}
+
+	//less/css: when not typing
 	notTyping =()=>{
 		$("#search").hide();
 		$("#pointer").show();
 	}
+	
 	//handle city change 
 	handleChange = e => {
 		e.preventDefault();
@@ -168,12 +185,16 @@ export default class Mainframe extends Component {
 		}
 		
 	} 
+	
+	//handle focus
 	handleFocus = function(event) {
 		event.target.select();
 		this.setState({ cname: "" });
 		//event.target.value ="";
 
 	}
+	
+	//check if the city input is correct from a city list
 	checkCity= () =>{
 		$.ajax({
 			url: "https://raw.githubusercontent.com/YZ6565785/world_city_list/master/city.list.json",
@@ -184,6 +205,7 @@ export default class Mainframe extends Component {
 			}
 		});
 	}
+	
 	// fetch city information through from local json
 	// update the geographical location and the city
 	getData_city = (parse_json) =>{
@@ -251,6 +273,8 @@ export default class Mainframe extends Component {
 		this.setState({editing: true});
 		
 	}
+	
+	//set initial states for the city 
 	set_city =() =>{
 		this.setState({
 			city: [{cname: this.props.locate, lon: this.props.lon, lat: this.props.lat}],
@@ -258,6 +282,8 @@ export default class Mainframe extends Component {
 		});
 		
 	}
+	
+	//remove the city seleted
 	removeThis = (e) =>{
 		var fields = this.state.default_localCityList.split("/");
 		console.warn(this.state.default_localCityList);
@@ -279,6 +305,8 @@ export default class Mainframe extends Component {
 		localStorage.setItem("city_saved",this.state.default_localCityList);
 		this.isEditing();
 	}
+	
+	//return to the home page
 	back_to_home =() =>{
 		this.editComplete();
 		this.props.back();
@@ -286,7 +314,7 @@ export default class Mainframe extends Component {
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData = () => {		
-		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
+		// API URL for the weather information
 		var url = "https://api.openweathermap.org/data/2.5/weather?q="+this.props.locate+"&APPID=09bd58ab01a13c8705892ed88691ee30";
 
 		
@@ -324,9 +352,7 @@ export default class Mainframe extends Component {
 				
 		});
 
-		
-		
-		
+		//main render method for the main_frame of the city page	
 		return ( 
 			<div class ={ style.container } >	
 				
